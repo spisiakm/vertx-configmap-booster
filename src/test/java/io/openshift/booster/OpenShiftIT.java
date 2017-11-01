@@ -3,7 +3,7 @@ package io.openshift.booster;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.response.Response;
 import io.fabric8.kubernetes.api.model.ConfigMap;
-import io.fabric8.openshift.client.OpenShiftClient;
+import io.fabric8.openshift.client.*;
 import org.arquillian.cube.openshift.impl.enricher.RouteURL;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.test.api.ArquillianResource;
@@ -67,6 +67,8 @@ public class OpenShiftIT {
             Response response = get("/api/greeting");
             return response.getStatusCode() < 500 && response.asString().contains("Bonjour");
         });
+
+        get("/api/greeting?name=vert.x").then().body("content", equalTo("Bonjour, vert.x from a ConfigMap !"));
     }
 
     @Test
@@ -78,6 +80,4 @@ public class OpenShiftIT {
                 get("/api/greeting").then().statusCode(500)
         );
     }
-
-
 }
