@@ -107,25 +107,6 @@
       <version>1.7.0</version>
       <scope>test</scope>
     </dependency>
-
-    <dependency>
-      <groupId>org.jboss.arquillian.junit</groupId>
-      <artifactId>arquillian-junit-container</artifactId>
-      <version>1.1.12.Final</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.arquillian.cube</groupId>
-      <artifactId>arquillian-cube-openshift</artifactId>
-      <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <artifactId>undertow-core</artifactId>
-          <groupId>io.undertow</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>
   </dependencies>
 
   <build>
