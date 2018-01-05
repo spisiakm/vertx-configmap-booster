@@ -5,18 +5,18 @@
   <parent>
     <groupId>io.openshift</groupId>
     <artifactId>booster-parent</artifactId>
-    <version>13</version>
+    <version>15</version>
   </parent>
   <groupId>io.openshift.booster</groupId>
   <artifactId>configmap-vertx</artifactId>
-  <version>17-SNAPSHOT</version>
+  <version>20-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>vertx-http-configmap</name>
   <description>Vert.x - HTTP endpoint + Config Map</description>
 
   <properties>
-    <vertx.version>3.4.2</vertx.version>
+    <vertx.version>3.5.0</vertx.version>
     <vertx-maven-plugin.version>1.0.13</vertx-maven-plugin.version>
     <vertx.verticle>io.openshift.booster.HttpApplication</vertx.verticle>
   </properties>
@@ -92,26 +92,26 @@
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
-      <version>3.6.1</version>
+      <version>3.8.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.jayway.restassured</groupId>
+      <groupId>io.rest-assured</groupId>
       <artifactId>rest-assured</artifactId>
-      <version>2.9.0</version>
+      <version>3.0.6</version>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.jayway.awaitility</groupId>
+      <groupId>org.awaitility</groupId>
       <artifactId>awaitility</artifactId>
-      <version>1.7.0</version>
+      <version>3.0.0</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>org.jboss.arquillian.junit</groupId>
       <artifactId>arquillian-junit-container</artifactId>
-      <version>1.1.12.Final</version>
+      <version>1.1.13.Final</version>
       <scope>test</scope>
     </dependency>
 
@@ -169,9 +169,6 @@
             </executions>
             <configuration>
               <enricher>
-                <excludes>
-                  <exclude>f8-maven-scm</exclude>
-                </excludes>
                 <config>
                   <vertx-health-check>
                     <path>/health</path>
