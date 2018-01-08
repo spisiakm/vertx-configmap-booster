@@ -3,17 +3,15 @@ package io.openshift.booster;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.fabric8.kubernetes.api.model.ConfigMap;
-import io.fabric8.openshift.client.*;
-import org.arquillian.cube.openshift.impl.enricher.AwaitRoute;
-import org.arquillian.cube.openshift.impl.enricher.RouteURL;
-import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.arquillian.test.api.ArquillianResource;
-import org.junit.*;
-import org.junit.runner.RunWith;
+import io.openshift.booster.test.OpenShiftTestAssistant;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import java.io.File;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
 import static org.awaitility.Awaitility.await;
@@ -25,23 +23,31 @@ import static org.hamcrest.core.IsEqual.equalTo;
  * Check the behavior of the application when running in OpenShift.
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-@RunWith(Arquillian.class)
 public class OpenShiftIT {
 
     @RouteURL("${app.name}")
     @AwaitRoute
     private URL route;
 
-    @ArquillianResource
-    private OpenShiftClient oc;
+    @BeforeClass
+    public static void prepare() throws Exception {
+        assistant.deployApplication();
+        assistant.deploy("app-config", new File("target/test-classes/test-config.yml"));
 
-    @Before
-    public void setup() {
-        RestAssured.baseURI = route.toString();
+    }
+
+    @AfterClass
+    public static void cleanup() {
+        try {
+            assistant.cleanup();
+        } catch (Exception e) {
+            // Ignore it.
+        }
     }
 
     @Test
     public void testAThatWeAreReady() throws Exception {
+        assistant.awaitApplicationReadinessOrFail();
         await().atMost(5, TimeUnit.MINUTES).catchUncaughtExceptions().until(() -> {
             Response response = get();
             return response.getStatusCode() < 500;
@@ -56,10 +62,10 @@ public class OpenShiftIT {
 
     @Test
     public void testCThatWeCanReloadTheConfiguration() {
-        ConfigMap map = oc.configMaps().withName("app-config").get();
+        ConfigMap map = assistant.client().configMaps().withName("app-config").get();
         assertThat(map).isNotNull();
 
-        oc.configMaps().withName("app-config").edit()
+        assistant.client().configMaps().withName("app-config").edit()
             .addToData("app-config.yml", "message : \"Bonjour, %s from a ConfigMap !\"")
             .done();
 
@@ -74,7 +80,7 @@ public class OpenShiftIT {
     @Test
     public void testDThatWeServeErrorWithoutConfigMap() {
         get("/api/greeting").then().statusCode(200);
-        oc.configMaps().withName("app-config").delete();
+        assistant.client().configMaps().withName("app-config").delete();
 
         await().atMost(5, TimeUnit.MINUTES).catchUncaughtExceptions().untilAsserted(() ->
             get("/api/greeting").then().statusCode(500)

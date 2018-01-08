@@ -64,6 +64,7 @@ objects:
         from:
           kind: ImageStreamTag
           name: runtime:latest
+        incremental: true
         env:
         - name: MAVEN_ARGS_APPEND
           value: "-pl ${SOURCE_REPOSITORY_DIR}"
@@ -91,7 +92,7 @@ objects:
       expose: "true"
       app: configmap-vertx
       provider: fabric8
-      version: 17-SNAPSHOT
+      version: 20-SNAPSHOT
       group: io.openshift.booster
     name: configmap-vertx
   spec:
@@ -110,11 +111,11 @@ objects:
     annotations:
       fabric8.io/iconUrl: img/icons/vertx.svg
       fabric8.io/git-branch: master
-      fabric8.io/metrics-path: dashboard/file/kubernetes-pods.json/?var-project=configmap-vertx&var-version=17-SNAPSHOT
+      fabric8.io/metrics-path: dashboard/file/kubernetes-pods.json/?var-project=configmap-vertx&var-version=20-SNAPSHOT
     labels:
       app: configmap-vertx
       provider: fabric8
-      version: 17-SNAPSHOT
+      version: 20-SNAPSHOT
       group: io.openshift.booster
     name: configmap-vertx
   spec:
@@ -133,11 +134,11 @@ objects:
         annotations:
           fabric8.io/iconUrl: img/icons/vertx.svg
           fabric8.io/git-branch: master
-          fabric8.io/metrics-path: dashboard/file/kubernetes-pods.json/?var-project=configmap-vertx&var-version=17-SNAPSHOT
+          fabric8.io/metrics-path: dashboard/file/kubernetes-pods.json/?var-project=configmap-vertx&var-version=20-SNAPSHOT
         labels:
           app: configmap-vertx
           provider: fabric8
-          version: 17-SNAPSHOT
+          version: 20-SNAPSHOT
           group: io.openshift.booster
       spec:
         containers:
@@ -189,7 +190,7 @@ objects:
     labels:
       app: configmap-vertx
       provider: fabric8
-      version: 17-SNAPSHOT
+      version: 20-SNAPSHOT
       group: io.openshift.booster
     name: configmap-vertx
   spec:
