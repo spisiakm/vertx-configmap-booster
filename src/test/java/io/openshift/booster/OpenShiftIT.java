@@ -1,6 +1,7 @@
 package io.openshift.booster;
 
-import com.jayway.restassured.response.Response;
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
 import io.fabric8.kubernetes.api.model.ConfigMap;
 import io.openshift.booster.test.OpenShiftTestAssistant;
 import org.junit.AfterClass;
@@ -13,8 +14,8 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.util.concurrent.TimeUnit;
 
-import static com.jayway.awaitility.Awaitility.await;
-import static com.jayway.restassured.RestAssured.get;
+import static org.awaitility.Awaitility.await;
+import static io.restassured.RestAssured.get;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
 
@@ -24,7 +25,9 @@ import static org.hamcrest.core.IsEqual.equalTo;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class OpenShiftIT {
 
-    private static OpenShiftTestAssistant assistant = new OpenShiftTestAssistant();
+    @RouteURL("${app.name}")
+    @AwaitRoute
+    private URL route;
 
     @BeforeClass
     public static void prepare() throws Exception {
@@ -79,7 +82,7 @@ public class OpenShiftIT {
         get("/api/greeting").then().statusCode(200);
         assistant.client().configMaps().withName("app-config").delete();
 
-        await().atMost(5, TimeUnit.MINUTES).catchUncaughtExceptions().until(() ->
+        await().atMost(5, TimeUnit.MINUTES).catchUncaughtExceptions().untilAsserted(() ->
             get("/api/greeting").then().statusCode(500)
         );
     }
