@@ -7,5 +7,9 @@
     <property name="namespace.use.current">true</property>
     <property name="env.init.enabled">true</property>
     <property name="enableImageStreamDetection">false</property>
+    <property name="env.dependencies">
+      <env.dependency>file://${basedir}/src/test/resources/app-config.yml</env.dependency>
+      <env.dependency>file://${basedir}/src/test/resources/rolebinding.yml</env.dependency>
+    </property>
   </extension>
 </arquillian>
